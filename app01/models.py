@@ -17,6 +17,9 @@ class Activity(models.Model):
     important_guests = models.CharField(max_length=32)
     tag = models.CharField(max_length=32, verbose_name="标签", null=True)
 
+    activity_status_choices = ((0, '正在报名'), (1, '正在进行'), (2, '已过期'))
+    activity_status = models.SmallIntegerField(choices=activity_status_choices, default=0)
+
     activity_type_choices = ((0, '免费'), (1, '收费'))
     activity_type = models.SmallIntegerField(choices=activity_type_choices, default=0, verbose_name="活动的费用类型")
 
@@ -96,7 +99,10 @@ class Account(models.Model):
     uid = models.CharField(max_length=64, unique=True, help_text='微信用户绑定和CC视频统计')  # 与第3方交互用户信息时，用这个uid,以避免泄露敏感用户信息
     openid = models.CharField(max_length=128, blank=True, null=True)
     # 贝里余额
-    balance = models.PositiveIntegerField(default=0, verbose_name="可提现和使用余额")
+    balance = models.PositiveIntegerField(default=0, verbose_name="可提现和使用余额", null=True)
+
+    def __str__(self):
+        return self.username + 'Obj'
 
 class UserAuthToken(models.Model):
     """
