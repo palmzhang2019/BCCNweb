@@ -27,6 +27,7 @@ class LoginView(APIView):
                 random_str = get_random_str(user.username)
                 token = UserAuthToken.objects.update_or_create(user=user, defaults={"token": random_str})
                 res['token'] = str(random_str)
+                res['user_id'] = user.id
             else:
                 res["state_code"] = 1001,
                 res["msg"] = "用户名或者密码错误"

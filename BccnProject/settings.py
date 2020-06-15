@@ -29,7 +29,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,21 +36,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'app01.apps.App01Config',
-    'rest_framework'
+    'rest_framework',
+    'imagekit',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'BccnProject.utils.cors.CORSMiddleware',
-]
 
+]
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'BccnProject.urls'
 
 TEMPLATES = [
@@ -72,8 +75,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'BccnProject.wsgi.application'
-
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
@@ -122,3 +123,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES':['rest_framework.renderers.JSONRenderer','rest_framework.renderers.BrowsableAPIRenderer',],
+    'DEFAULT_VERSIONING_CLASS':'rest_framework.versioning.URLPathVersioning',
+    'ALLOWED_VERSIONS':['v1', 'v2'], # 允许的版本
+    'VERSIONS_PARAM': 'version', # 允许的版本
+    'DEFAULT_VERSION':'v1'
+}
