@@ -35,3 +35,7 @@ class LoginView(APIView):
             res['state_code'] = 1002
             res['msg'] = str(e)
         return JsonResponse(res,json_dumps_params={"ensure_ascii": False})
+
+
+class LogoutView(APIView):
+    pass

@@ -48,6 +48,13 @@ class InstituteView(ViewSetMixin, APIView):
             ret['error'] = '获取课程详细失败'
         return Response(ret)
 
+    def create(self, request, *args, **kwargs):
+        ret = {'code': 1000, 'data': None}
+        data = request.data
+        print(data)
+        # models.Institute.objects.create()
+        return Response(ret)
+
 class InstituteRecView(ViewSetMixin, APIView):
     def list(self, request, *args, **kwargs):
         ret = {'code': 1000, 'data': None}
