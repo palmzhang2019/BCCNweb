@@ -4,9 +4,10 @@ from rest_framework.viewsets import GenericViewSet, ViewSetMixin
 from app01 import models
 from rest_framework.response import Response
 from app01.serializers.institute import InstituteSerializer, InstituteDetailSerializer, InstituteRecSerializer
-
+from app01.auth.auth import Auth
 
 class InstituteView(ViewSetMixin, APIView):
+    # authentication_classes = [Auth,]
     def list(self, request, *args, **kwargs):
         """
         课程列表接口
@@ -49,10 +50,30 @@ class InstituteView(ViewSetMixin, APIView):
         return Response(ret)
 
     def create(self, request, *args, **kwargs):
+
         ret = {'code': 1000, 'data': None}
         data = request.data
-        print(data)
-        # models.Institute.objects.create()
+        # 验证身份
+        token = data['token']
+        TokenObj = models.UserAuthToken.objects.filter(token=token)
+        if not TokenObj:
+            ret['code'] = '1004'
+            ret['error'] = '身份验证失败'
+            return Response(ret)
+        userObj = models.Account.objects.get(pk=data['user_id'])
+        tagObjlist = models.Tag.objects.filter(id__in=data['tag'])
+
+        try:
+            institute = models.Institute.objects.create(
+                name=data['name'],
+                author=userObj,
+                main_image=data['main_image'],
+            )
+            institute.tag.add(*tagObjlist)
+            models.InstituteDetail.objects.create(institute=institute, content=data['content'])
+            ret['data'] = '添加成功'
+        except Exception as e:
+            ret['error'] = e
         return Response(ret)
 
 class InstituteRecView(ViewSetMixin, APIView):

@@ -4,6 +4,8 @@ from rest_framework.viewsets import GenericViewSet, ViewSetMixin
 from app01 import models
 from rest_framework.response import Response
 from app01.serializers.account import AccountSerializer
+from app01.serializers.institute import InstituteSerializer
+from app01.serializers.activity import ActivitySerializer
 
 
 class AccountView(ViewSetMixin, APIView):
@@ -37,15 +39,24 @@ class AccountView(ViewSetMixin, APIView):
         return Response(ret)
 
     def retrieve(self, request, *args, **kwargs):
-        ret = {'code': 1000, 'data': None}
+        ret = {'code': 1000, 'data': dict()}
 
         try:
             # 课程ID=2
             pk = kwargs.get('pk')
-            # 课程详细对象
-            obj = models.Account.objects.filter(id=pk).first()
-            ser = AccountSerializer(instance=obj, many=False)
-            ret['data'] = ser.data
+            # 用户详细对象
+            userObj = models.Account.objects.filter(id=pk).first()
+            articleObjList = userObj.article_author.all()
+            articleSer = InstituteSerializer(instance=articleObjList, many=True)
+
+            activityObjList = userObj.activity.all()
+            activitySer = ActivitySerializer(instance=activityObjList, many=True)
+
+            ser = AccountSerializer(instance=userObj, many=False)
+            ret['data']['account'] = ser.data
+            ret['data']['articlelist'] = articleSer.data
+            ret['data']['activitylist'] = activitySer.data
+
         except Exception as e:
             ret['code'] = 1001
             ret['error'] = '获取课程详细失败'

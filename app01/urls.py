@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^instituterec/$', institute.InstituteRecView.as_view({'get': 'list'})),
     url(r'^account/$', account.AccountView.as_view({'get': 'list'})),
     url(r'^account/(?P<pk>\d+)/$', account.AccountView.as_view({'get': 'retrieve'})),
-    url(r'tag/$', tag.TagView.as_view({'get': 'list'}))
+    url(r'tag/$', tag.TagView.as_view({'get': 'list', 'post':'create'}))
     #
     # url(r'^course/$', course.CourseView.as_view({'get': 'list'})),
     # url(r'^course/(?P<pk>\d+)/$', course.CourseView.as_view({'get': 'retrieve'})),

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'imagekit',
     'django_extensions',
+    'uploadapp.apps.UploadappConfig'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'BccnProject.urls'
@@ -137,3 +137,27 @@ REST_FRAMEWORK = {
     'VERSIONS_PARAM': 'version', # 允许的版本
     'DEFAULT_VERSION':'v1'
 }
+
+SALT = 'daidai'
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'simple': {
+#             'format': '[%(asctime)s] %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple'
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }

@@ -25,3 +25,10 @@ class TagView(ViewSetMixin, APIView):
             ret['error'] = '获取标签失败'
 
         return Response(ret)
+
+    def create(self, request, *args, **kwargs):
+        ret = {'code': 1000, 'data': None}
+        data = request.data
+        tagObj = models.Tag.objects.create(name=data['name'])
+        ret['data'] = {"tagid": tagObj.pk}
+        return Response(ret)

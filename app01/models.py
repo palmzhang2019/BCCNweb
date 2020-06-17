@@ -3,6 +3,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from django.contrib.auth.hashers import make_password, check_password
 
 
 # Create your models here.
@@ -52,7 +53,7 @@ class Tag(models.Model):
     # content_object = GenericForeignKey('content_type', 'object_id')
 
     name = models.CharField(max_length=64, unique=True)
-    breif = models.TextField(max_length=1024)
+    breif = models.TextField(max_length=1024, null=True)
 
     def __str__(self):
         return self.name
@@ -60,10 +61,10 @@ class Tag(models.Model):
 class Institute(models.Model):
     name = models.CharField(max_length=64, verbose_name="文章标题")
     post_datetime = models.DateTimeField(verbose_name="文章发布日期", auto_now_add=True)
-    author = models.ForeignKey(to="Account", verbose_name="作者", max_length=64, on_delete=models.SET_NULL, null=True, blank=True)
-    thumb_up = models.PositiveIntegerField(verbose_name="点赞数")
-    view_num = models.PositiveIntegerField(verbose_name="浏览数")
-    reply_num = models.PositiveIntegerField(verbose_name="回复数")
+    author = models.ForeignKey(to="Account", verbose_name="作者", related_name='article_author', max_length=64, on_delete=models.CASCADE, default= '')
+    thumb_up = models.PositiveIntegerField(verbose_name="点赞数", default=0)
+    view_num = models.PositiveIntegerField(verbose_name="浏览数", default=0)
+    reply_num = models.PositiveIntegerField(verbose_name="回复数", default=0)
     main_image = ProcessedImageField(
         upload_to="institute",
         null=True,
@@ -172,7 +173,7 @@ class Account(models.Model):
     username = models.CharField("用户名", max_length=64, unique=True)
     password = models.CharField("密码", max_length=64)
 
-    uid = models.CharField(max_length=64, unique=True, help_text='微信用户绑定和CC视频统计')  # 与第3方交互用户信息时，用这个uid,以避免泄露敏感用户信息
+    uid = models.CharField(max_length=64, blank=True, help_text='微信用户绑定和CC视频统计')  # 与第3方交互用户信息时，用这个uid,以避免泄露敏感用户信息
     openid = models.CharField(max_length=128, blank=True, null=True)
     weights_choices = ((0,"普通会员"),(1, '青铜会员'), (2, '白银会员'), (3, '金牌会员'))
     weights = models.SmallIntegerField(choices=weights_choices, default=0)
